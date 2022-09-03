@@ -2,43 +2,52 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MenuUIHandler : MonoBehaviour
 {
-    public TextMeshProUGUI TitleText;
-    public TMP_InputField NewUserName;
-    public Button StartButton;
+    public GameObject NameTextError;
+    public TMP_InputField PlayerName;
 
     public void Start()
     {
-        UserManager.Instance.LoadBestScore();
+        NameTextError.SetActive(false);
+    }
 
-        if (!string.IsNullOrEmpty(UserManager.Instance.BestScoreUserName))
+    public void StartGame()
+    {
+        var isNameValid = ValidatePlayerName();
+
+        if(isNameValid)
         {
-            TitleText.text = $"Best Score: {UserManager.Instance.BestScoreUserName} : {UserManager.Instance.BestScore}";
-            NewUserName.text = UserManager.Instance.BestScoreUserName;
+            PlayerManager.Instance.PlayerName = PlayerName.text;
+            PlayerManager.Instance.Score = 0;
+
+            SceneManager.LoadScene(1);
+        }
+    }
+
+    public bool ValidatePlayerName()
+    {
+        if (string.IsNullOrEmpty(PlayerName?.text))
+        {
+            NameTextError.SetActive(true);
+            return false;
         }
         else
         {
-            TitleText.text = $"Best Score: {UserManager.Instance.UserName} : 0";
+            NameTextError.SetActive(false);
+            return true;
         }
     }
-    public void StartGame()
-    {
-        NewUserNameSelected();
-        SceneManager.LoadScene(1);
-    }
 
-    public void NewUserNameSelected()
+    public void ShowRanking()
     {
-        UserManager.Instance.UserName = string.IsNullOrEmpty(NewUserName?.text) ? "" : NewUserName.text;
-        UserManager.Instance.Score = 0;
+        SceneManager.LoadScene(2);
     }
 
     public void Exit()
     {
-        UserManager.Instance.SaveUserData();
+        PlayerManager.Instance.SavePlayerData();
 
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();

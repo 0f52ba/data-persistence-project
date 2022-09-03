@@ -8,9 +8,11 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
+    public Text PlayerText;
     public Text ScoreText;
     public Text BestScoreText;
-    public GameObject GameOverText;
+    public GameObject GameOverMenu;
+    public Text PlayerScoreText;
 
     private bool m_Started = false;
     private int m_Points;
@@ -34,6 +36,7 @@ public class MainManager : MonoBehaviour
             }
         }
 
+        ShowPlayerData();
         ShowBestScore();
     }
 
@@ -64,32 +67,40 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"Score: {m_Points}";
     }
 
     public void GameOver()
     {
         m_GameOver = true;
-        GameOverText.SetActive(true);
+        GameOverMenu.SetActive(true);
+        PlayerScoreText.text = $"Your score: {m_Points}";
 
-        UserManager.Instance.LoadBestScore();
         SaveScore();
         ShowBestScore();
     }
 
     private void SaveScore()
     {
-        UserManager.Instance.Score = m_Points;
+        PlayerManager.Instance.Score = m_Points;
 
-        if (UserManager.Instance.Score > UserManager.Instance.BestScore)
+        if (PlayerManager.Instance.Score >= PlayerManager.Instance.BestScore ||
+            PlayerManager.Instance.Score >= PlayerManager.Instance.SecondScore ||
+            PlayerManager.Instance.Score >= PlayerManager.Instance.ThirdScore)
         {
-            UserManager.Instance.SaveUserData();
+            PlayerManager.Instance.SavePlayerData();
         }
+    }
+
+    private void ShowPlayerData()
+    {
+        PlayerText.text = $"Player: {PlayerManager.Instance.PlayerName}";
+        ScoreText.text = $"Score: 0";
     }
 
     public void ShowBestScore()
     {
-        UserManager.Instance.LoadBestScore();
-        BestScoreText.text = $"Best Score : {UserManager.Instance.BestScoreUserName} : {UserManager.Instance.BestScore}";
+        PlayerManager.Instance.LoadBestScore();
+        BestScoreText.text = $"{PlayerManager.Instance.BestScorePlayerName} : {PlayerManager.Instance.BestScore}";
     }
 }

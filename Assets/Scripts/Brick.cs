@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,17 +14,17 @@ public class Brick : MonoBehaviour
         MaterialPropertyBlock block = new MaterialPropertyBlock();
         switch (PointValue)
         {
-            case 1 :
-                block.SetColor("_BaseColor", Color.green);
+            case 5 :
+                block.SetColor("_BaseColor", new Color(0.2980392f, 0.2470588f, 0.5686275f));
                 break;
             case 2:
-                block.SetColor("_BaseColor", Color.yellow);
+                block.SetColor("_BaseColor", new Color(0.5686275f, 0.2705882f, 0.7137255f));
                 break;
-            case 5:
-                block.SetColor("_BaseColor", Color.blue);
+            case 1:
+                block.SetColor("_BaseColor", new Color(0.7254902f, 0.345098f, 0.6470588f));
                 break;
             default:
-                block.SetColor("_BaseColor", Color.red);
+                block.SetColor("_BaseColor", new Color(1.0f, 0.3372549f, 0.4666667f));
                 break;
         }
         renderer.SetPropertyBlock(block);
