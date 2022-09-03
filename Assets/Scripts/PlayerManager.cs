@@ -124,25 +124,7 @@ public class PlayerManager : MonoBehaviour
             if (!string.IsNullOrEmpty(json))
             {
                 PlayerData[] bestScoreData = JsonHelper.FromJson<PlayerData>(json);
-                List<PlayerData> newData = new List<PlayerData>();
-                
-                if (bestScoreData?.Length > 0)
-                {
-                    newData.AddRange(bestScoreData);
-
-                    PlayerData[] rankingData = newData
-                        .OrderByDescending(x => x.Score)
-                        .ToArray();
-
-                    BestScorePlayerName = rankingData[0]?.PlayerName ?? string.Empty;
-                    BestScore = rankingData[0]?.Score ?? 0;
-
-                    SecondScorePlayerName = rankingData[1]?.PlayerName ?? string.Empty;
-                    SecondScore = rankingData[1]?.Score ?? 0;
-
-                    ThirdScorePlayerName = rankingData[2]?.PlayerName ?? string.Empty;
-                    ThirdScore = rankingData[2]?.Score ?? 0;
-                }
+                LoadRankingData(bestScoreData);
             }
         }
         else
@@ -153,6 +135,35 @@ public class PlayerManager : MonoBehaviour
             SecondScore = 0;
             ThirdScorePlayerName = string.Empty;
             ThirdScore = 0;
+        }
+    }
+
+    private void LoadRankingData(PlayerData[] bestScoreData)
+    {
+        List<PlayerData> newData = new List<PlayerData>();
+
+        if (bestScoreData?.Length > 0)
+        {
+            newData.AddRange(bestScoreData);
+
+            PlayerData[] rankingData = newData
+                .OrderByDescending(x => x.Score)
+                .ToArray();
+
+            BestScorePlayerName = rankingData[0]?.PlayerName ?? string.Empty;
+            BestScore = rankingData[0]?.Score ?? 0;
+
+            if(bestScoreData?.Length > 1)
+            {
+                SecondScorePlayerName = rankingData[1]?.PlayerName ?? string.Empty;
+                SecondScore = rankingData[1]?.Score ?? 0;
+            }
+
+            if (bestScoreData?.Length > 2)
+            {
+                ThirdScorePlayerName = rankingData[2]?.PlayerName ?? string.Empty;
+                ThirdScore = rankingData[2]?.Score ?? 0;
+            }
         }
     }
 
